@@ -22,17 +22,18 @@ public class KthElementJava {
     public static void main(String[] args) {
         // TODO code application logic here
         ArrayList a = new ArrayList<Integer>();
-        fill(a,10);
-        print(a);
-        System.out.println( select(4, a));
+        fill(a,1000000);
         
-        ArrayList test = new ArrayList<Integer>();
-        test.add(3);
-        test.add(2);
-        test.add(9);
-        test.add(4);
-        test.add(5);
-        System.out.println( findMedian(test));
+        System.out.println( selectV2(3, a));
+        Collections.sort(a);
+        print(a);
+//        ArrayList test = new ArrayList<Integer>();
+//        test.add(3);
+//        test.add(2);
+//        test.add(9);
+//        test.add(4);
+//        test.add(5);
+//        System.out.println( findMedian(test));
     }
     
     public static void print(ArrayList<Integer> a){
@@ -45,7 +46,12 @@ public class KthElementJava {
     public static void fill(ArrayList<Integer> a, int size){
         Random rand = new Random();
         for(int i=0; i<size; i++){
-            a.add(rand.nextInt(15));
+            int start = a.size();
+            while(a.size()==start){
+                int insert = rand.nextInt(Integer.MAX_VALUE);
+                if(!a.contains(insert)) a.add(insert);
+            }
+            
         }
     }
     
@@ -76,20 +82,32 @@ public class KthElementJava {
     public static int selectV2(int k, ArrayList<Integer> s){
         if(s.size()<50){
             Collections.sort(s);
-            return s.get(k);
+            return s.get(k-1);
         }else{
             ArrayList m = new ArrayList<Integer>();
             ArrayList temp = new ArrayList<Integer>();
             for(int i=0; i<s.size(); i++){
-                temp.add(i);
+                temp.add(s.get(i));
                 if(temp.size()==5 || (i==(s.size()-1))){
                     m.add(findMedian(temp));
                     temp.clear();
                 }
             }
+            int med = selectV2((int)(Math.ceil((double)m.size()/2.0f)),m);
+            ArrayList s1 = new ArrayList<Integer>();
+            ArrayList s2 = new ArrayList<Integer>();
+            ArrayList s3 = new ArrayList<Integer>();
+            for(int i=0; i<s.size(); i++){
+                if(s.get(i)<med) s1.add(s.get(i));
+                else if (s.get(i)>med) s3.add(s.get(i));
+                else s2.add(s.get(i));
+            }
+            if(s1.size()>=k) return selectV2(k,s1);
+            else if ((s1.size()+s2.size())>=k) return med;
+            else return selectV2(k-s1.size()-s2.size(),s3);
+            
         }
         
-        return 0;
     }
 
     private static int findMedian(ArrayList<Integer> a) {
@@ -131,6 +149,8 @@ public class KthElementJava {
          else return a.get(0);
      }
         
+    }else if(a.size()==2){
+        return 0;
     }
         return 0;
     }
