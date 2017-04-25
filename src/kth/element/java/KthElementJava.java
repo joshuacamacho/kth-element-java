@@ -20,13 +20,21 @@ public class KthElementJava {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Timer time = new Timer();
         ArrayList a = new ArrayList<Integer>();
-        fill(a,1000000);
+        int size = 1000000;
+        fill(a,size);
+        System.out.println("For size of "+ size);
+        System.out.println("Version 1");
+        time.start();
+        System.out.println( select(3, a));
+        time.end();
         
+        System.out.println("\nVersion 2");
+        time.start();
         System.out.println( selectV2(3, a));
-        Collections.sort(a);
-        print(a);
+        time.end();
+        
 //        ArrayList test = new ArrayList<Integer>();
 //        test.add(3);
 //        test.add(2);
@@ -47,10 +55,10 @@ public class KthElementJava {
         Random rand = new Random();
         for(int i=0; i<size; i++){
             int start = a.size();
-            while(a.size()==start){
+//            while(a.size()==start){
                 int insert = rand.nextInt(Integer.MAX_VALUE);
                 if(!a.contains(insert)) a.add(insert);
-            }
+//            }
             
         }
     }
@@ -159,6 +167,23 @@ public class KthElementJava {
         int temp = a.get(i);
         a.set(i, a.get(j));
         a.set(j, temp);
+    }
+    
+    public static class Timer{
+        long s;
+        
+        Timer(){
+            s=0;
+        }
+        public void start(){
+            s = System.nanoTime();
+        }
+        
+        public long end(){
+            s = System.nanoTime() - s;
+            System.out.print("Elapsed Time: " + s +"ns");
+            return s;
+        }
     }
     
 }
